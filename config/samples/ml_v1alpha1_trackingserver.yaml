@@ -1,0 +1,11 @@
+apiVersion: ml.mlflow.org/v1alpha1
+kind: TrackingServer
+metadata:
+  name: trackingserver-sample
+spec:
+  # Add fields here
+  size: 2
+  image: "k8scc01covidacr.azurecri.io/mlflow:5655f604b1e0320f6d21bffc22beebeb1eae7d5d"
+  # image_pull_secret: "8scc01covidacr-registry-connection"
+  # S3secretName: "test"
+  # S3endpointURL: "localhost:5000"

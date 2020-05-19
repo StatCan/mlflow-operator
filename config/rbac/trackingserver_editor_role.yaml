@@ -1,0 +1,24 @@
+# permissions for end users to edit trackingservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: trackingserver-editor-role
+rules:
+- apiGroups:
+  - ml.mlflow.org
+  resources:
+  - trackingservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ml.mlflow.org
+  resources:
+  - trackingservers/status
+  verbs:
+  - get

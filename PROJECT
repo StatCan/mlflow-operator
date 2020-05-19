@@ -1,0 +1,7 @@
+domain: mlflow.org
+repo: github.com/statcan/mlflow-operator
+resources:
+- group: ml
+  kind: TrackingServer
+  version: v1alpha1
+version: "2"
