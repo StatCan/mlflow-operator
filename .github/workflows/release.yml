@@ -62,3 +62,23 @@ jobs:
       uses: docker://docker.io/aquasec/trivy:0.2.1
       with:
         args: --cache-dir /var/lib/trivy --severity CRITICAL --no-progress ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator:${{ github.sha }}
+
+    # Run Kustomize
+    - name: kustomize
+      uses: statcan/actions/kubectl@master
+      with:
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+        args: apply -k config/crd
+      env:
+        MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
+        MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}
+
+    # Run Kustomize
+    - name: kustomize
+      uses: statcan/actions/kubectl@master
+      with:
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+        args: apply -k config/default
+      env:
+        MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
+        MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}

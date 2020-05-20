@@ -27,7 +27,7 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: controller:0.0.1
+        image: controller:latest
         name: manager
         resources:
           limits:

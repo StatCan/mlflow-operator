@@ -28,3 +28,4 @@ bin/*
 webroot/*
 build
 vendor
+.env
