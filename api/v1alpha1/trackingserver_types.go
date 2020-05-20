@@ -30,8 +30,8 @@ type TrackingServerSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 	Size          int32  `json:"size"`
 	Image         string `json:"image"`
-	S3endpointURL string `json:"S3endpointURL,omitempty"`
-	S3secretName  string `json:"S3secretName,omitempty"`
+	S3endpointURL string `json:"s3endpointURL,omitempty"`
+	S3secretName  string `json:"s3secretName,omitempty"`
 }
 
 // TrackingServerStatus defines the observed state of TrackingServer
