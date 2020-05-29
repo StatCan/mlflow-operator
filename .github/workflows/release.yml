@@ -41,13 +41,6 @@ jobs:
         docker build -f Dockerfile -t ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator:${{ github.sha }} .
         docker push ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator:${{ github.sha }}
 
-    # Set the target Azure Kubernetes Service (AKS) cluster.
-    - uses: azure/aks-set-context@v1
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: ${{ env.CLUSTER_NAME }}
-        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
-
     # Create imagepullsecret for Azure Container registry (ACR)
     - uses: azure/k8s-create-secret@v1
       with:
