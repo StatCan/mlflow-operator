@@ -29,3 +29,6 @@ webroot/*
 build
 vendor
 .env
+
+# Custom
+secret.txt

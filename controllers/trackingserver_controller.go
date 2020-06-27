@@ -181,6 +181,12 @@ func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
 		},
 	}
 
+	if len(cr.Spec.ImagePullSecret) != 0 {
+		dep.Spec.Template.Spec.ImagePullSecrets = []corev1.LocalObjectReference{
+			{Name: cr.Spec.ImagePullSecret},
+		}
+	}
+
 	return dep
 
 }
