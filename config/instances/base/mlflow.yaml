@@ -1,0 +1,70 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mlflow
+  annotations:
+    kubernetes.io/ingress.class: istio
+spec:
+  rules:
+  - host: mlflow.example.ca
+    http:
+      paths:
+      - backend:
+          serviceName: mlflow
+          servicePort: 5000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: mlflow
+  labels:
+    app.kubernetes.io/name: mlflow
+spec:
+  host: "*.mlflow.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: "DISABLE"
+---
+apiVersion: ml.mlflow.org/v1alpha1
+kind: TrackingServer
+metadata:
+  name: mlflow
+spec:
+  # Add fields here
+  size: 2
+  image: "mlflow"
+  imagePullSecret: "registry-connection"
+---
+apiVersion: security.cloud.ibm.com/v1
+kind: OidcConfig
+metadata:
+  name: mlflow
+spec:
+  clientId: clientid
+  clientSecretRef:
+    key: client-secret
+    name: mlflow
+  discoveryUrl: discoveryurl
+  scopes: null
+---
+apiVersion: security.cloud.ibm.com/v1
+kind: Policy
+metadata:
+  name: mlflow
+spec:
+  targets:
+  - paths:
+    - method: ALL
+      policies:
+      - config: mlflow
+        policyType: oidc
+        redirectUri: https://mlflow.example.ca
+        rules:
+        - claim: groups
+          match: ANY
+          source: id_token
+          values:
+          - group_admin
+          - group_alt
+      prefix: /
+    serviceName: mlflow

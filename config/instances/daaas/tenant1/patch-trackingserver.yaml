@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/image
+  value: mlflow
+- op: replace
+  path: /spec/imagePullSecret
+  value: registry-connection

@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/rules/0/host
+  value: mlflow.example.ca
+- op: replace
+  path: /spec/rules/0/http/paths/0/backend/serviceName
+  value: mlflow
