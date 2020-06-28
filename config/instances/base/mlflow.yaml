@@ -32,7 +32,7 @@ metadata:
 spec:
   image: "mlflow"
   imagePullSecret: "registry-connection"
-  replicas: 2
+  replicas: 1
   size: "20Gi"
   storageClass: "managed-premium"
 ---

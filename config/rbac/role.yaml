@@ -41,6 +41,8 @@ rules:
 - apiGroups:
   - '*'
   resources:
+  - persistentvolumes
+  - persistentvolumeclaims
   - services
   verbs:
   - create

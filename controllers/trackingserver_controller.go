@@ -92,6 +92,10 @@ func (r *TrackingServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		if err2 != nil {
 			return ctrl.Result{}, err2
 		}
+		err3 := r.Client.Create(context.TODO(), pvc)
+		if err3 != nil {
+			return ctrl.Result{}, err3
+		}
 		return ctrl.Result{}, nil
 	} else if err != nil {
 		return ctrl.Result{}, err
@@ -151,6 +155,7 @@ func pvcMLFlow(cr *mlv1alpha1.TrackingServer) *corev1.PersistentVolumeClaim {
 				"app.kubernetes.io/name":       cr.Name,
 				"app.kubernetes.io/managed-by": "mlflow-operator",
 			},
+			OwnerReferences: []metav1.OwnerReference{},
 		},
 		Spec: corev1.PersistentVolumeClaimSpec{
 			AccessModes: []corev1.PersistentVolumeAccessMode{
@@ -181,7 +186,7 @@ func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
 			Name:          "trackingserver",
 		}},
 		VolumeMounts: []corev1.VolumeMount{{
-			MountPath: "/mlruns",
+			MountPath: "/mnt/mlruns",
 			Name:      "files-mlflow",
 		}},
 	}}
