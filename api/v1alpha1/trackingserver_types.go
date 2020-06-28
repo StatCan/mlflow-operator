@@ -28,9 +28,11 @@ import (
 type TrackingServerSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Size            int32  `json:"size"`
 	Image           string `json:"image"`
 	ImagePullSecret string `json:"imagePullSecret"`
+	Replicas        int32  `json:"replicas"`
+	Size            string `json:"size"`
+	StorageClass    string `json:"storageClass"`
 	S3endpointURL   string `json:"s3endpointURL,omitempty"`
 	S3secretName    string `json:"s3secretName,omitempty"`
 }
