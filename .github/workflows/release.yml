@@ -77,7 +77,7 @@ jobs:
       env:
         MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
         MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}
-        MLFLOW_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow:e6378082ac49b1c110e4c0cd81525c7480ee09ac
+        MLFLOW_IMAGE: ${{ secrets.MLFLOW_IMAGE }}
         MLFLOW_IMAGEPULLSECRET: ${{ secrets.MLFLOW_IMAGEPULLSECRET }}
         MLFLOW_OIDC_CLIENT: ${{ secrets.MLFLOW_OIDC_CLIENT }}
         MLFLOW_OIDC_SECRET: ${{ secrets.MLFLOW_OIDC_SECRET }}
