@@ -181,6 +181,16 @@ func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
 	container := []corev1.Container{{
 		Image: cr.Spec.Image,
 		Name:  cr.Name,
+		Env: []corev1.EnvVar{
+			{
+				Name:  "MLFLOW_SERVER_FILE_STORE",
+				Value: "file://mnt/mlruns/files",
+			},
+			{
+				Name:  "MLFLOW_SERVER_DEFAULT_ARTIFACT_ROOT",
+				Value: "file://mnt/mlruns/artifacts",
+			},
+		},
 		Ports: []corev1.ContainerPort{{
 			ContainerPort: 5000,
 			Name:          "trackingserver",
