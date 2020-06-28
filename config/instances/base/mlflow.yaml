@@ -31,9 +31,10 @@ metadata:
   name: mlflow
 spec:
   # Add fields here
-  size: 2
   image: "mlflow"
   imagePullSecret: "registry-connection"
+  replicas: 2
+  size: "10Gi"
 ---
 apiVersion: security.cloud.ibm.com/v1
 kind: OidcConfig

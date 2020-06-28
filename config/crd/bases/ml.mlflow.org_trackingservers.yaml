@@ -36,18 +36,19 @@ spec:
           properties:
             image:
               type: string
+            replicas:
+              format: int32
+              type: integer
             S3secretName:
               type: string
             S3endpointURL:
               type: string
             size:
-              description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                Important: Run "make" to regenerate code after modifying this file'
-              format: int32
-              type: integer
+              type: string
           required:
           - image
           - size
+          - replicas
           type: object
         status:
           description: TrackingServerStatus defines the observed state of TrackingServer

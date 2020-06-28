@@ -23,6 +23,7 @@ import (
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -64,13 +65,17 @@ func (r *TrackingServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 
 	// Define a new Deployment object
 	var deployment = deployMLFlow(instance)
-	srv := svcMLFlow(instance)
+	svc := svcMLFlow(instance)
+	pvc := pvcMLFlow(instance)
 
 	// Set TrackingServer instance as the owner and controller
 	if err := controllerutil.SetControllerReference(instance, deployment, r.Scheme); err != nil {
 		return ctrl.Result{}, err
 	}
-	if err := controllerutil.SetControllerReference(instance, srv, r.Scheme); err != nil {
+	if err := controllerutil.SetControllerReference(instance, svc, r.Scheme); err != nil {
+		return ctrl.Result{}, err
+	}
+	if err := controllerutil.SetControllerReference(instance, pvc, r.Scheme); err != nil {
 		return ctrl.Result{}, err
 	}
 
@@ -83,7 +88,7 @@ func (r *TrackingServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		err2 := r.Client.Create(context.TODO(), srv)
+		err2 := r.Client.Create(context.TODO(), svc)
 		if err2 != nil {
 			return ctrl.Result{}, err2
 		}
@@ -128,8 +133,35 @@ func svcMLFlow(cr *mlv1alpha1.TrackingServer) *corev1.Service {
 	return service
 }
 
+func pvcMLFlow(cr *mlv1alpha1.TrackingServer) *corev1.PersistentVolumeClaim {
+	storageClassName := "default"
+	size := cr.Spec.Size
+	persistentVolumeClaim := &corev1.PersistentVolumeClaim{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      cr.Name,
+			Namespace: cr.Namespace,
+			Labels: map[string]string{
+				"app.kubernetes.io/name":       cr.Name,
+				"app.kubernetes.io/managed-by": "mlflow-operator",
+			},
+		},
+		Spec: corev1.PersistentVolumeClaimSpec{
+			AccessModes: []corev1.PersistentVolumeAccessMode{
+				corev1.ReadWriteOnce,
+			},
+			Resources: corev1.ResourceRequirements{
+				Requests: corev1.ResourceList{
+					corev1.ResourceStorage: resource.MustParse(size),
+				},
+			},
+			StorageClassName: &storageClassName,
+		},
+	}
+	return persistentVolumeClaim
+}
+
 func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
-	replicas := cr.Spec.Size
+	replicas := cr.Spec.Replicas
 	labels := map[string]string{
 		"app.kubernetes.io/name":       cr.Name,
 		"app.kubernetes.io/managed-by": "mlflow-operator",
@@ -140,6 +172,10 @@ func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
 		Ports: []corev1.ContainerPort{{
 			ContainerPort: 5000,
 			Name:          "trackingserver",
+		}},
+		VolumeMounts: []corev1.VolumeMount{{
+			MountPath: "/mlruns",
+			Name:      "files-mlflow",
 		}},
 	}}
 
@@ -176,6 +212,14 @@ func deployMLFlow(cr *mlv1alpha1.TrackingServer) *v1.Deployment {
 				},
 				Spec: corev1.PodSpec{
 					Containers: container,
+					Volumes: []corev1.Volume{{
+						Name: "files-mlflow",
+						VolumeSource: corev1.VolumeSource{
+							PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+								ClaimName: cr.Name,
+							},
+						},
+					}},
 				},
 			},
 		},
