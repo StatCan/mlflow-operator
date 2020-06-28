@@ -32,6 +32,7 @@ type TrackingServerSpec struct {
 	ImagePullSecret string `json:"imagePullSecret"`
 	Replicas        int32  `json:"replicas"`
 	Size            string `json:"size"`
+	StorageClass    string `json:"storageClass"`
 	S3endpointURL   string `json:"s3endpointURL,omitempty"`
 	S3secretName    string `json:"s3secretName,omitempty"`
 }

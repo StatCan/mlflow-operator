@@ -134,7 +134,14 @@ func svcMLFlow(cr *mlv1alpha1.TrackingServer) *corev1.Service {
 }
 
 func pvcMLFlow(cr *mlv1alpha1.TrackingServer) *corev1.PersistentVolumeClaim {
-	storageClassName := "default"
+	var storageClassName string
+
+	if cr.Spec.StorageClass != "" {
+		storageClassName = cr.Spec.StorageClass
+	} else {
+		storageClassName = "default"
+	}
+
 	size := cr.Spec.Size
 	persistentVolumeClaim := &corev1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
