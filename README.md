@@ -11,4 +11,18 @@ The main goals of the operator are:
 3. Facilitate proper devops (backups, monitoring and high-availability)
 4. Provide basic Multi-Tenancy
 
-> Note: Project is currently under active development.
+## Workflow
+
+Currently we have added an instances level folder that houses a `daaas/tenant1` kustomize deployment.
+
+From this point on is just a straight copy of the folder and slight customization for additional instances:
+
+* Minor tweaks to kustomization.yaml for that instance
+* Add additional envvars to CI + `./params.sh`
+* Add the redirect url to Azure AD
+
+For programmatic access we will need to add custom header support to MLFLOW but for right now can use curl:
+
+```sh
+curl -v --cookie "oidc-cookie-XXXXX=XXXXX" https://daaas-tenant1-mlflow.covid.cloud.statcan.ca/api/2.0/preview/mlflow/experiments/list
+```
