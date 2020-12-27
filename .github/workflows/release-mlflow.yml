@@ -17,6 +17,8 @@ on:
       - master
     paths:
       - mlflow/**
+      - .github/workflows/build-mlflow.yml
+      - .github/workflows/release-mlflow.yml
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -103,7 +105,7 @@ jobs:
       uses: statcan/actions/kubectl@master
       with:
         kubeconfig: ${{ secrets.KUBECONFIG }}
-        args: apply -k mlflow
+        args: apply -k .
         dir: mlflow
       env:
         MLFLOW_OIDC_CLIENT: ${{ secrets.MLFLOW_OIDC_CLIENT }}

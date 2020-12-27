@@ -1,0 +1,3 @@
+- op: replace
+  path: /spec/jwksUrl
+  value: https://mlflow.example.ca
