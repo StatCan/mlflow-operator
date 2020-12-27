@@ -10,11 +10,11 @@
 #     c. AZURE_CREDENTIALS with the output of `az ad sp create-for-rbac --sdk-auth`
 #
 # 2. Change the values for the REGISTRY_NAME, CLUSTER_NAME, CLUSTER_RESOURCE_GROUP and NAMESPACE environment variables (below).
-name: release
+name: build mlflow operator
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    paths-ignore:
+      - mlflow/**
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -47,42 +47,3 @@ jobs:
         image-name: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator:${{ github.sha }}
         severity-threshold: CRITICAL
         run-quality-checks: false
-
-    # Run Kustomize
-    - name: kustomize
-      uses: statcan/actions/kubectl@master
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
-        args: apply -k config/crd
-      env:
-        MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
-        MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}
-
-    # Run Kustomize
-    - name: kustomize
-      uses: statcan/actions/kubectl@master
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
-        args: apply -k config/default
-      env:
-        MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
-        MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}
-
-    # Run Kustomize
-    - name: kustomize
-      uses: statcan/actions/kubectl@master
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
-        args: apply -k .
-      env:
-        MLFLOW_OPERATOR_IMAGE: ${{ env.REGISTRY_NAME }}.azurecr.io/mlflow-operator
-        MLFLOW_OPERATOR_IMAGE_VERSION: ${{ github.sha }}
-        MLFLOW_IMAGE: ${{ secrets.MLFLOW_IMAGE }}
-        MLFLOW_IMAGEPULLSECRET: ${{ secrets.MLFLOW_IMAGEPULLSECRET }}
-        MLFLOW_OIDC_CLIENT: ${{ secrets.MLFLOW_OIDC_CLIENT }}
-        MLFLOW_OIDC_SECRET: ${{ secrets.MLFLOW_OIDC_SECRET }}
-        MLFLOW_OIDC_DISCOVERY: ${{ secrets.MLFLOW_OIDC_DISCOVERY }}
-        MLFLOW_ADMIN_POLICY_GROUP: ${{ secrets.MLFLOW_ADMIN_POLICY_GROUP }}
-        DAAAS_TENANT1_DOMAIN_NAME: ${{ secrets.DAAAS_TENANT1_DOMAIN_NAME }}
-        DAAAS_TENANT1_PREFIX: ${{ secrets.DAAAS_TENANT1_PREFIX }}
-        DAAAS_TENANT1_POLICY_GROUP: ${{ secrets.DAAAS_TENANT1_POLICY_GROUP }}
