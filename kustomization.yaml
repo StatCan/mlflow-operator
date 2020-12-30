@@ -24,4 +24,4 @@ namespace: mlflow
 # crucial ways (image tags, a few server arguments,
 # etc. that differ from the common base).
 bases:
-- config/instances/daaas/tenant1
+- instances/standard/tenant-1

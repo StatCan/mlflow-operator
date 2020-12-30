@@ -13,7 +13,7 @@ The main goals of the operator are:
 
 ## Workflow
 
-Currently we have added an instances level folder that houses a `daaas/tenant1` kustomize deployment.
+Currently we have added an instances level folder that houses a `standard/tenant-1` kustomize deployment.
 
 From this point on is just a straight copy of the folder and slight customization for additional instances:
 
@@ -24,5 +24,5 @@ From this point on is just a straight copy of the folder and slight customizatio
 For programmatic access we will need to add custom header support to MLFLOW but for right now can use curl:
 
 ```sh
-curl -v --cookie "oidc-cookie-XXXXX=XXXXX" https://daaas-tenant1-mlflow.covid.cloud.statcan.ca/api/2.0/preview/mlflow/experiments/list
+curl -v --cookie "oidc-cookie-XXXXX=XXXXX" https://mlflow-standard-tenant-1.covid.cloud.statcan.ca/api/2.0/preview/mlflow/experiments/list
 ```

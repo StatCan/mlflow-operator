@@ -7,11 +7,11 @@ kind: Kustomization
 namespace: mlflow
 
 # Adds namespace to all resources.
-namePrefix: daaas-tenant1-
+namePrefix: mlflow-standard-tenant-1-
 
 # Labels to add to all resources and selectors.
 commonLabels:
-  app.kubernetes.io/instance: daaas-tenant1
+  app.kubernetes.io/instance: mlflow-standard-tenant-1
 
 # Each entry in this list should resolve to a directory
 # containing a kustomization file, else the
