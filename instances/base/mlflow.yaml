@@ -34,7 +34,7 @@ spec:
   imagePullSecret: "registry-connection"
   replicas: 1
   size: "20Gi"
-  storageClass: "standard"
+  storageClass: "managed-premium"
 ---
 apiVersion: security.cloud.ibm.com/v1
 kind: OidcConfig
