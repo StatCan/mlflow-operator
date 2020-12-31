@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip --no-cache-dir install --quiet --no-use-pep517 \
-      'mlflow==1.13.0' \
+      'mlflow==1.13.1' \
       'azure-storage-blob==12.6.0' \
       'azure-storage-file-share==12.3.0' \
       'azure-storage-file-datalake==12.2.0' \
