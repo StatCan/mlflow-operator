@@ -15,7 +15,7 @@ The main goals of the operator are:
 
 Currently we have added an instances level folder that houses a `standard/tenant-1` kustomize deployment.
 
-From this point on is just a straight copy of the folder and slight customization for additional instances:
+From this point on is just a straight copy of the folder and some slight customizations for additional instances:
 
 * Minor tweaks to kustomization.yaml for that instance
 * Add additional envvars to CI + `./params.sh`
