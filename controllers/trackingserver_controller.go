@@ -88,20 +88,38 @@ func (r *TrackingServerReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		err2 := r.Client.Create(context.TODO(), svc)
-		if err2 != nil {
-			return ctrl.Result{}, err2
-		}
-		err3 := r.Client.Create(context.TODO(), pvc)
-		if err3 != nil {
-			return ctrl.Result{}, err3
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	svcFound := &corev1.Service{}
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: svc.Name, Namespace: svc.Namespace}, svcFound)
+	if err != nil && errors.IsNotFound(err) {
+		reqLogger.Info("Creating a new Service", "Service.Namespace", svc.Namespace, "Service.Name", svc.Name)
+		err = r.Client.Create(context.TODO(), svc)
+		if err != nil {
+			return ctrl.Result{}, err
 		}
 		return ctrl.Result{}, nil
 	} else if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	reqLogger.Info("Skip reconciliation: Deployment already exists", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
+	pvcFound := &corev1.PersistentVolumeClaim{}
+	err = r.Client.Get(context.TODO(), types.NamespacedName{Name: pvc.Name, Namespace: pvc.Namespace}, pvcFound)
+	if err != nil && errors.IsNotFound(err) {
+		reqLogger.Info("Creating a new PVC", "PVC.Namespace", pvc.Namespace, "PVC.Name", pvc.Name)
+		err = r.Client.Create(context.TODO(), pvc)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	reqLogger.Info("Skip reconciliation: Deployment, Service and PVC already exists", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
 
 	return ctrl.Result{}, nil
 }
